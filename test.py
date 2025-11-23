@@ -26,11 +26,11 @@ res = conn.execute("SELECT id, HW(vec) from data")
 print(res.fetchall())
 
 print("Hamming Distance")
-res = conn.execute("SELECT id, HD(vec, ?) from data", (data[0][1], ))
+res = conn.execute("SELECT id, HD(vec, ?) from data", (data[0][1],))
 print(res.fetchall())
 
 print("Fractional Hamming Distance")
-res = conn.execute("SELECT id, FHD(vec, ?) from data", (data[0][1], ))
+res = conn.execute("SELECT id, FHD(vec, ?) from data", (data[0][1],))
 print(res.fetchall())
 
 print("Shannon Entropy")
@@ -45,5 +45,11 @@ blob_result = res.fetchone()[0]
 # We can load the blob into an array of doubles
 probabilities = np.frombuffer(blob_result, dtype=np.float64)
 
-print(probabilities.shape) # (NUM_BYTES * 8,)
+print(probabilities.shape)  # (NUM_BYTES * 8,)
 print(probabilities)
+
+print("Computing Reliability")
+res = conn.execute("SELECT reliability(?, vec) FROM data", (data[0][1]))
+blob_result = res.fetchone()[0]
+reliability = np.frombuffer(blob_result, dtype=np.float64)
+print(reliability)
